@@ -1,0 +1,23 @@
+table {
+    width: 100%;
+}
+
+.productView{
+    padding: 20px 20px;
+}
+
+.selectList{
+    padding: 5px 5px; 
+}
+
+.productList{
+    padding: 25px 5px;
+}
+
+.productBidList{
+    padding: 5px 5px;
+}
+
+.mat-header-row{
+    background-color: aliceblue;
+}
