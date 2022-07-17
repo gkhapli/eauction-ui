@@ -1,90 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ProductBidDetails } from '../models/ProductBidDetails';
 import { Product } from '../models/Product';
+import { ProductService } from '.././services/product.service';
+import { MatSelectChange } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-product-overview',
   templateUrl: './product-overview.component.html',
   styleUrls: ['./product-overview.component.css']
 })
-export class ProductOverviewComponent{
-  selectedValue: string | undefined;
-  //product = new FormControl('');
+export class ProductOverviewComponent implements OnInit {
 
-  productDetails: Product[] = [
-    {
-        "id": 2,
-        "productName": "Colors",
-        "shortDescription": "Drawing colors ",
-        "detailedDescription": "Drawing Colours ",
-        "category": "Painting",
-        "startingPrice": 1000,
-        "bidEndDate": "2022-06-25"
-    },
-    {
-        "id": 34,
-        "productName": "Colors",
-        "shortDescription": "Sketch pencils ",
-        "detailedDescription": "Sketch pencils ",
-        "category": "Painting",
-        "startingPrice": 500,
-        "bidEndDate": "2022-06-29"
-    },
-    {
-        "id": 38,
-        "productName": "Gold chains",
-        "shortDescription": "Gold chains",
-        "detailedDescription": "Gold chains",
-        "category": "Ornament",
-        "startingPrice": 1200,
-        "bidEndDate": "2022-06-29"
-    }
-];
+  totalElements: number = 0;
+  
+  constructor(private productService: ProductService){
+  }
 
-  productBidList: ProductBidDetails[] = [
-    {
-      "id": 2,
-      "productName": "Colors",
-      "shortDescription": "Drawing colors ",
-      "detailedDescription": "Drawing Colours ",
-      "category": "Painting",
-      "startingPrice": 1000,
-      "bidEndDate": "2022-06-25",
-      "bidAmount": 7000,
-      "buyerFirstName": "asdasd",
-      "buyerLastName": "Basket",
-      "buyerAddress": "Haarlem",
-      "buyerCity": "Amstelveen",
-      "buyerState": "Zuid-Holland",
-      "buyerPin": "1233MN",
-      "buyerPhone": 9345934509,
-      "buyerEmail": "dlkfgj@gmail.com"
-    },
-    {
-      "id": 2,
-      "productName": "Colors",
-      "shortDescription": "Drawing colors ",
-      "detailedDescription": "Drawing Colours ",
-      "category": "Painting",
-      "startingPrice": 1000,
-      "bidEndDate": "2022-06-25",
-      "bidAmount": 5000,
-      "buyerFirstName": "Geert",
-      "buyerLastName": "Robins",
-      "buyerAddress": "Ghostlaan",
-      "buyerCity": "Amstelveen",
-      "buyerState": "Noord-Holland",
-      "buyerPin": "1105MN",
-      "buyerPhone": 9284982903,
-      "buyerEmail": "njsfhl@gmail.com"
-    }
-  ];
+  selectedProduct = new MatTableDataSource<Product>([]);
+  productBidList = new MatTableDataSource<ProductBidDetails>([]);
+  productId: number = 0;
+
+  public productDetails: Product[] = [];
 
   displayedProductColumns: string[] = ['id', 'productName', 'shortDescription', 'detailedDescription',
   'category','startingPrice','bidEndDate'];
 
   displayedBidColumns: string[] = ['buyerFirstName','buyerLastName',
 'buyerAddress','buyerCity','buyerState','buyerPin','buyerPhone','buyerEmail','bidAmount'];
+
+ngOnInit(): void {
+
+  this.productService.getProducts().subscribe(data =>
+    this.productDetails = data
+  );
+}
+
+private getProductBids(productId: Number, request: any) {
+  this.productService.getAll(productId,request)
+  .subscribe(data=> {
+      console.log(data);
+      this.productBidList.data = data['content'];
+      this.totalElements = data['totalElements'];
+  });
+}
+
+nextPage(event: PageEvent) {
+  const request = {'page':'','size':''};
+  request['page'] = event.pageIndex.toString();
+  request['size'] = event.pageSize.toString();
+  console.log(event);
+  this.getProductBids(this.productId,request);
+}
+
+updateProduct(event: MatSelectChange){
+    
+    this.productService.getProductById(event.value).subscribe((data: Product[]) => {
+      this.selectedProduct.data = data;
+    });
+    this.productId = event.value;
+    const request = {'page':0,'size':10};
+    this.getProductBids(event.value,request);
+    }
 
 }

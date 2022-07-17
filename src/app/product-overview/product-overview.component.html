@@ -2,17 +2,16 @@
   <div class="selectClass">
     <mat-form-field appearance="fill">
       <mat-label>Select Product to check the Bid Details</mat-label>
-      <mat-select [(ngModel)]="selectedValue" name="product">
+      <mat-select name="product" (selectionChange)="updateProduct($event)">
         <mat-option *ngFor="let product of productDetails" [value]="product.id">
           {{product.productName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <p> Selected food: {{selectedValue}} </p>
   </div>
   <div class="productList">
     <p> Product Details </p>
-    <table mat-table [dataSource]="productDetails" class="mat-elevation-z8">
+    <table mat-table [dataSource]="selectedProduct" class="mat-elevation-z8">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> Id </th>
         <td mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -112,5 +111,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedBidColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedBidColumns;"></tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [length]="totalElements" (page)="nextPage($event)"> </mat-paginator>
   </div>
 </form>
