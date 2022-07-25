@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { ProductOverviewComponent } from './product-overview/product-overview.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,12 +11,16 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { LoginComponent } from './login/login.component';
+import { JwtconfigInterceptor } from './interceptors/jwtconfig.interceptor';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProductOverviewComponent
+    ProductOverviewComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -27,9 +32,19 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTableModule,
     MatGridListModule,
     HttpClientModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    RouterModule.forRoot([
+      {path: '', component: LoginComponent},
+      {path: 'products', component: ProductOverviewComponent, canActivate: [AuthGuard]},
+    ]),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtconfigInterceptor,
+      multi:true
+    }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

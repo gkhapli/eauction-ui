@@ -15,16 +15,14 @@ export class ProductService {
 
   getProducts() {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${appGlobalConstants.TOKEN}`
+      'Content-Type': 'application/json'
     })
     return this.http.get<Product[]>(appGlobalConstants.ZUULSERVICEAPI+"/e-auction/api/v1/sellerService/report/products",{headers:headers});
   }
 
   getProductById(productId:Number) {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${appGlobalConstants.TOKEN}`
+      'Content-Type': 'application/json'
     })
     return this.http.get<Product[]>(appGlobalConstants.ZUULSERVICEAPI+"/e-auction/api/v1/sellerService/report/products/"+productId,{headers:headers});
   }
@@ -32,8 +30,7 @@ export class ProductService {
   showBids(productId:Number): Observable<any> {
     const params = new HttpParams().set('page',0).set('size',10);
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${appGlobalConstants.TOKEN}`
+      'Content-Type': 'application/json'
     })
     return this.http.get<any>(appGlobalConstants.ZUULSERVICEAPI+"/e-auction/api/v1/sellerService/report/show-bids/"+productId,{headers:headers,params:params});
   }
@@ -42,8 +39,7 @@ export class ProductService {
     
 		const params = new HttpParams().set('page',request['page']).set('size',request['size']);
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${appGlobalConstants.TOKEN}`
+      'Content-Type': 'application/json'
     })
     return this.http.get<any>(appGlobalConstants.ZUULSERVICEAPI+"/e-auction/api/v1/sellerService/report/show-bids/"+productId,{headers:headers,params:params});
   
