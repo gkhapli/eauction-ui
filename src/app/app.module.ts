@@ -14,6 +14,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { LoginComponent } from './login/login.component';
 import { JwtconfigInterceptor } from './interceptors/jwtconfig.interceptor';
 import { AuthGuard } from './guards/auth.guard';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -30,6 +35,10 @@ import { AuthGuard } from './guards/auth.guard';
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatCardModule,
     MatGridListModule,
     HttpClientModule,
     MatPaginatorModule,
@@ -43,6 +52,10 @@ import { AuthGuard } from './guards/auth.guard';
       provide: HTTP_INTERCEPTORS,
       useClass: JwtconfigInterceptor,
       multi:true
+    },
+    {
+      provide: ErrorStateMatcher, 
+      useClass: ShowOnDirtyErrorStateMatcher
     }
 ],
   bootstrap: [AppComponent]

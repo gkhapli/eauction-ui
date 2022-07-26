@@ -1,14 +1,23 @@
 <form class="productView">
-  <div class="selectClass">
-    <mat-form-field appearance="fill">
-      <mat-label>Select Product to check the Bid Details</mat-label>
-      <mat-select name="product" (selectionChange)="updateProduct($event)">
-        <mat-option *ngFor="let product of productDetails" [value]="product.id">
-          {{product.productName}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <table class="loginclass" cellspacing="0">
+    <tr>
+      <td>
+        <mat-form-field appearance="fill">
+            <mat-label>Select Product to check the Bid Details</mat-label>
+            <mat-select name="product" (selectionChange)="updateProduct($event)">
+              <mat-option *ngFor="let product of productDetails" [value]="product.id">
+                {{product.productName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </td>
+      <td>
+        <mat-card-actions>
+          <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button" mat-raised-button color="warn" class="btn btn-danger">Logout</button>
+        </mat-card-actions>
+      </td>
+    </tr>
+  </table>
   <div class="productList">
     <p> Product Details </p>
     <table mat-table [dataSource]="selectedProduct" class="mat-elevation-z8">

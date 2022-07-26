@@ -5,6 +5,7 @@ import { ProductService } from '.././services/product.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-product-overview',
@@ -15,7 +16,8 @@ export class ProductOverviewComponent implements OnInit {
 
   totalElements: number = 0;
   
-  constructor(private productService: ProductService){
+  constructor(private productService: ProductService,
+    public authService: AuthService){
   }
 
   selectedProduct = new MatTableDataSource<Product>([]);
@@ -35,6 +37,10 @@ ngOnInit(): void {
   this.productService.getProducts().subscribe(data =>
     this.productDetails = data
   );
+}
+
+logout() {
+  this.authService.logout();
 }
 
 private getProductBids(productId: Number, request: any) {

@@ -4,6 +4,7 @@ import * as appGlobalConstants from '../../app-global-constants';
 import * as moment from "moment";
 import { AuthResult } from '../models/AuthResult';
 import { shareReplay, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -11,7 +12,8 @@ import { shareReplay, tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private router: Router) { }
 
   login(username:string, password:string ) {
     return this.http
@@ -31,14 +33,24 @@ export class AuthService {
   logout() {
     localStorage.removeItem("jwttoken");
     localStorage.removeItem("expiresAt");
+    this.router.navigate(['/']);
   }
 
   getToken() {
     return localStorage.getItem('jwttoken');
   }
 
-  get isLoggedIn(): boolean {
-    let authToken = localStorage.getItem('jwttoken');
-    return authToken !== null ? true : false;
+  public isLoggedIn() {
+      return moment().isBefore(this.getExpiration());
   }
+
+  isLoggedOut() {
+      return !this.isLoggedIn();
+  }
+
+  getExpiration() {
+      let expiration = localStorage.getItem("expiresAt")!;
+      const expiresAt = JSON.parse(expiration);
+      return moment(expiresAt);
+  } 
 }
